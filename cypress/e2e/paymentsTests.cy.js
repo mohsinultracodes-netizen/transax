@@ -1,4 +1,5 @@
 // cypress/e2e/paymentsPage.cy.js
+//This file contains test cases of Payments module
 
 import PaymentsPage from '../pageLogic/payments'
 
