@@ -1,6 +1,7 @@
 const { defineConfig } = require("cypress");
-require("dotenv").config();
-
+require("dotenv").config({
+  path: require("path").resolve(process.cwd(), ".env"),
+});
 module.exports = defineConfig({
   e2e: {
     watchForFileChanges: false,
@@ -10,31 +11,29 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
+
     defaultCommandTimeout: 60000,
     viewportHeight: 1080,
     viewportWidth: 1800,
-
   },
+
   env: {
     environments: {
       dev: {
-        access_token: process.env.ACCESS_TOKEN,
+        adminemail: process.env.DEV_ADMIN_EMAIL,
+        adminpassword: process.env.DEV_ADMIN_PASSWORD,
+        accesstoken: process.env.ACCESS_TOKEN,
         host: "https://dashboard.dev.transax.com/auth/login",
-        admin: {
-          email: process.env.DEV_ADMIN_EMAIL,
-          password: process.env.DEV_ADMIN_PASSWORD,
-        },
+
       },
 
       staging: {
         host: "https://dashboard.staging.transax.com/auth/login",
-        admin: {
-          email: process.env.STAGING_ADMIN_EMAIL,
-          password: process.env.STAGING_ADMIN_PASSWORD,
-        },
+
+        adminemail: process.env.STAGING_ADMIN_EMAIL,
+        adminpassword: process.env.STAGING_ADMIN_PASSWORD,
+
       },
     },
   },
-}
-
-);
+});

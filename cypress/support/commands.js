@@ -9,7 +9,7 @@ Cypress.Commands.add("Safelogin", (envKey = "dev") => {
     cy.visit(currentEnv.host);
 
     // Perform login using LoginPage class
-    loginPage.performLogin(currentEnv.admin.email, currentEnv.admin.password);
+    loginPage.performLogin(currentEnv.adminemail, currentEnv.adminpassword);
 });
 
 Cypress.Commands.add("login", (envKey = "dev") => {
@@ -17,13 +17,13 @@ Cypress.Commands.add("login", (envKey = "dev") => {
 
   // Inject token into localStorage
   cy.window().then((win) => {
-    win.localStorage.setItem("accessToken", currentEnv.access_token);
+    win.localStorage.setItem("accessToken", currentEnv.accesstoken);
   });
 
   // Navigate to the dashboard root (not /auth/login)
   cy.visit(currentEnv.host.replace("/auth/login", "/"));
   cy.wait(1000)
   // Perform login using LoginPage class
-    loginPage.performLogin(currentEnv.admin.email, currentEnv.admin.password);
+    loginPage.performLogin(currentEnv.adminemail, currentEnv.adminpassword);
 });
 

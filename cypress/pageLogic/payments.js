@@ -1,39 +1,61 @@
-/* 
-------------------------------------Functionalities of Payments Page--------------------------------------
+// cypress/pageLogic/payments.js
 
+import PaymentsSelectors from '../selectors/paymentsSelectors'
 
-----------Payments Tab (All, Incomplete, Completed, Refunds)------------------
+export default class PaymentsPage {
 
-1. Verify that All tab displays all payment records by default
+  payments = new PaymentsSelectors()
 
-2. Verify that selecting Incomplete tab shows only incomplete payments
+  navigateToPaymentsPage(){
+    this.payments.getPaymentsNavBtn()
+    this.payments.clickOnPaymentsSideNavBtn()
+  }
 
-3. Verify that selecting Completed tab shows only completed payments
+  verifyPaymentsPageLoaded() {
+    this.payments.assertPageTitle()
+    this.payments.assertTableVisible()
+  }
 
-4. Verify that selecting Refunds tab shows only refunded payments
+  openTab(tabName) {
+    this.payments.clickTab(tabName)
+    this.payments.assertTableVisible()
+  }
 
-5. Verify that payment count updates correctly when switching tabs
+  verifyCompletedPayments() {
+    this.openTab('Completed')
+    cy.wait(1000)
+    this.payments.assertStatusInRow('COMPLETED')
+  }
 
-6. Verify that table data refreshes when a different tab is selected
+  verifyIncompletePayments() {
+    this.openTab('Incomplete')
+    cy.wait(1000)
+    this.payments.assertStatusInRow('PROCESSED')
+  }
 
+  searchByTransactionId(id) {
+    this.payments.searchPayment(id)
+    cy.wait(1000)
+    this.payments.assertRowsExist()
+  }
 
+  searchByCustomerName(name) {
+    this.payments.searchPayment(name)
+    cy.wait(1000)
+    this.payments.assertRowsExist()
+  }
 
------------Search Payments-------------------
+  verifyEmptySearch() {
+    this.payments.searchPayment('invalid-data-123')
+    cy.wait(1000)
+    this.payments.assertNoResults()
+  }
 
-Verify user can search payments by transaction ID
+  verifyGlobalSearch(name) {
+    this.payments.searchGlobal(name)
+  }
 
-Verify user can search payments by customer name
-
----------------Global Search Contacts-------------
-
-Verify user can search contacts using global search
-
-Verify search works with name, email, and phone number
-
-Verify partial and case-insensitive search returns correct results
-
-Verify selecting a contact from results opens contact details
-
-Verify appropriate message is shown when no contacts are found
-
-*/
+  openDisputeCenter() {
+    this.payments.clickDisputeCenter()
+  }
+}

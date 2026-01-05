@@ -4,7 +4,7 @@ export default class LoginSelectors {
 selectors = {
 EMAIL : "#input-v-0-1",
 PASSWORD : "input[type='password']",
-LOGINBTN : "button",
+LOGINBTN : '[data-testid="login-submit-button"]',
 TITLE : "[data-test='title']",
 }
 ////////////////////*****************  RAW FUNCTIONS ***********************//////////////////
@@ -17,7 +17,7 @@ TITLE : "[data-test='title']",
     }
 
     performLogin(){
-    cy.get(this.selectors.LOGINBTN).contains("LOG IN").click()  
+    cy.get(this.selectors.LOGINBTN).click()  
     }
 
     // assertSuccessfulLogin(){
