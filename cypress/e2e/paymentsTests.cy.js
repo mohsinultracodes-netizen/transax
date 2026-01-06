@@ -1,15 +1,11 @@
-// cypress/e2e/paymentsPage.cy.js
-//This file contains test cases of Payments module
-
-import PaymentsPage from '../pageLogic/payments'
+import PaymentsPage from "../pageLogic/payments";
 
 describe('Payments Page Test Suite', () => {
 
   const payments = new PaymentsPage()
 
   beforeEach(() => {
-    cy.log(JSON.stringify(Cypress.env("environments")))
-    cy.login("dev");
+    cy.login('dev')
     payments.navigateToPaymentsPage()
   })
 
@@ -71,7 +67,7 @@ describe('Payments Page Test Suite', () => {
   })
 
   it('E3: Empty search input keeps table intact', () => {
-    payments.searchByCustomerName('{backspace}')
+    payments.searchByCustomerName(' ')   // empty input
     payments.verifyPaymentsPageLoaded()
   })
 
@@ -80,7 +76,10 @@ describe('Payments Page Test Suite', () => {
   })
 
   it('E5: Pagination loads next page correctly', () => {
-    cy.get('button[aria-label="Next page"]').click()
+    //navigate to next page
+    cy.get('button[aria-label="Next page"]')
+      .should('be.visible')
+      .click()
   })
 
   /* ================= CRITICAL (5) ================= */

@@ -1,103 +1,90 @@
-// cypress/selectors/paymentsSelectors.js
-
-export default class PaymentsSelectors {
-
+export default class PaymentSelectors {
     selectors = {
-        PAYMENTS_NAV_BTN: '#nav-payments > .v-list-item__content > .tw-flex > img',
-        PAGE_TITLE: '.page-title',
-        TAB_BUTTON: 'button',
+        PAYMENTS_NAV_BTN: '#nav-payments',
+        PAGE_TITLE: 'h1',
+        TAB_BUTTON: '.v-btn__content > .content-container > span',
+        PAYMENTS_TABLE: '.v-table',
+        TABLE_ROW: 'tbody.v-data-table__tbody tr',
+        TABLE_CELL: 'td .v-chip__content',
         SEARCH_PAYMENTS: 'input[placeholder="Search payments"]',
         GLOBAL_SEARCH: 'input[placeholder="Search By Contact"]',
-        PAYMENTS_TABLE: '.v-table__wrapper',
-        TABLE_ROW: '.v-data-table__tr',
-        TABLE_CELL: '.v-data-table__td',
-        STATUS_BADGE: '[class*="status"]',
-        DISPUTE_CENTER_BTN: '.dispute-center-link > .v-btn > .v-btn__content',
-        PAGINATION_NEXT: 'button[aria-label="Next page"]',
-        THREE_DOTS: 'button'
+        DISPUTE_CENTER_BTN: '.dispute-center-link > .v-btn',
+    };
+
+    /* ---------- Navigation ---------- */
+
+    openPaymentsPage() {
+        cy.get(this.selectors.PAYMENTS_NAV_BTN)
+            .should('be.visible')
+            .click();
     }
 
-    /* ---------- Getters ---------- */
-    getPaymentsNavBtn() {
-        return cy.get(this.selectors.PAYMENTS_NAV_BTN)
-    }
-    getPageTitle() {
-        return cy.get(this.selectors.PAGE_TITLE)
-    }
+    /* ---------- Tabs ---------- */
 
-    getTab(tabName) {
-        return cy.get(this.selectors.TAB_BUTTON).contains(tabName)
+    openTab(tabName) {
+        cy.get(this.selectors.TAB_BUTTON)
+            .contains(tabName)
+            .should('be.visible')
+            .click();
+        cy.wait(3000)
     }
 
-    getPaymentsTable() {
-        return cy.get(this.selectors.PAYMENTS_TABLE)
+    /* ---------- Search ---------- */
+
+    searchPayment(value) {
+        cy.get(this.selectors.SEARCH_PAYMENTS)
+            .should('be.visible')
+            .clear()
+            .type(value);
     }
 
-    getTableRows() {
-        return cy.get(this.selectors.TABLE_ROW)
-    }
-
-    getTableCell() {
-        return cy.get(this.selectors.TABLE_CELL)
-
-    }
-
-    getSearchPayments() {
-        return cy.get(this.selectors.SEARCH_PAYMENTS)
-    }
-
-    getGlobalSearch() {
-        return cy.get(this.selectors.GLOBAL_SEARCH)
+    searchGlobal(value) {
+        cy.get(this.selectors.GLOBAL_SEARCH)
+            .should('be.visible')
+            .clear()
+            .type(value);
     }
 
     /* ---------- Actions ---------- */
 
-    clickOnPaymentsSideNavBtn() {
-        this.getPaymentsNavBtn().should('be.visible').click().click()
-        this.getPaymentsNavBtn().click().click()
-
-    }
-
-    clickTab(tabName) {
-        this.getTab(tabName).click()
-    }
-
-    searchPayment(value) {
-        this.getSearchPayments().clear().type(value)
-    }
-
-    searchGlobal(value) {
-        this.getGlobalSearch().clear().type(value)
-    }
-
-    clickDisputeCenter() {
-        cy.get(this.selectors.DISPUTE_CENTER_BTN).click()
+    openDisputeCenter() {
+        cy.get(this.selectors.DISPUTE_CENTER_BTN)
+            .should('be.visible')
+            .click();
     }
 
     /* ---------- Assertions ---------- */
-    assertPageTitle() {
-        this.getPageTitle().contains('Payments').should('be.visible')
+
+    verifyPaymentsPageLoaded() {
+        cy.get(this.selectors.PAGE_TITLE)
+            .contains('Payments')
+            .should('be.visible');
     }
 
-    assertTableVisible() {
-        this.getPaymentsTable().should('be.visible')
+    verifyPaymentsTableVisible() {
+        cy.get(this.selectors.PAYMENTS_TABLE)
+            .should('be.visible');
     }
 
-    assertRowsExist() {
-        this.getTableRows().its('length').should('be.greaterThan', 0)
+    verifyPaymentsTableHasRows() {
+        cy.get(this.selectors.TABLE_ROW)
+            .should('have.length.greaterThan', 0);
     }
 
-    assertStatusInRow(status) {
-        this.getTableRows().each(row => {
-            cy.wrap(row)
+    verifyStatusExistsInTable(status) {
+        cy.get(this.selectors.TABLE_ROW).each(($row) => {
+            cy.wrap($row)
+                .find(this.selectors.TABLE_CELL)
                 .invoke('text')
-                .then(rowText => {
-                    expect(rowText.toLowerCase()).to.include(status.toLowerCase())
-                })
-        })
+                .then((text) => {
+                    expect(text.trim().toLowerCase()).to.eq(status.toLowerCase());
+                });
+        });
     }
 
-    assertNoResults() {
-        this.getTableRows().should('have.length', 0)
+    verifyNoResultsFound() {
+        cy.get(this.selectors.TABLE_ROW)
+            .should('have.length', 1);
     }
 }
+
