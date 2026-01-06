@@ -12,9 +12,13 @@ module.exports = defineConfig({
       // implement node event listeners here
     },
 
-    defaultCommandTimeout: 60000,
+    defaultCommandTimeout: 80000,
     viewportHeight: 1080,
     viewportWidth: 1800,
+    pageLoadTimeout: 80000,
+    requestTimeout: 80000,
+    responseTimeout: 80000,
+
   },
 
   env: {

@@ -1,61 +1,59 @@
-// cypress/pageLogic/payments.js
-
-import PaymentsSelectors from '../selectors/paymentsSelectors'
+import PaymentSelectors from "../selectors/paymentsSelectors"
+const payments = new PaymentSelectors
 
 export default class PaymentsPage {
 
-  payments = new PaymentsSelectors()
+    navigateToPaymentsPage() {
+        payments.openPaymentsPage()
+        payments.verifyPaymentsPageLoaded()
+        payments.verifyPaymentsTableVisible()
+    }
 
-  navigateToPaymentsPage(){
-    this.payments.getPaymentsNavBtn()
-    this.payments.clickOnPaymentsSideNavBtn()
-  }
+    verifyPaymentsPageLoaded() {
+        payments.verifyPaymentsPageLoaded()
+        payments.verifyPaymentsTableVisible()
+    }
 
-  verifyPaymentsPageLoaded() {
-    this.payments.assertPageTitle()
-    this.payments.assertTableVisible()
-  }
+    openTab(tabName) {
+        payments.openTab(tabName)
+        payments.verifyPaymentsTableVisible()
+    }
 
-  openTab(tabName) {
-    this.payments.clickTab(tabName)
-    this.payments.assertTableVisible()
-  }
+    verifyCompletedPayments() {
+        payments.openTab('Completed')
+        cy.wait(1000)
+        payments.verifyStatusExistsInTable('COMPLETED')
+    }
 
-  verifyCompletedPayments() {
-    this.openTab('Completed')
-    cy.wait(1000)
-    this.payments.assertStatusInRow('COMPLETED')
-  }
+    verifyIncompletePayments() {
+        payments.openTab('Incomplete')
+        cy.wait(1000)
+        payments.verifyStatusExistsInTable('PROCESSED')
+    }
 
-  verifyIncompletePayments() {
-    this.openTab('Incomplete')
-    cy.wait(1000)
-    this.payments.assertStatusInRow('PROCESSED')
-  }
+    searchByTransactionId(transactionId) {
+        payments.searchPayment(transactionId)
+        cy.wait(1000)
+        payments.verifyPaymentsTableHasRows()
+    }
 
-  searchByTransactionId(id) {
-    this.payments.searchPayment(id)
-    cy.wait(1000)
-    this.payments.assertRowsExist()
-  }
+    searchByCustomerName(customerName) {
+        payments.searchPayment(customerName)
+        cy.wait(1000)
+        payments.verifyPaymentsTableHasRows()
+    }
 
-  searchByCustomerName(name) {
-    this.payments.searchPayment(name)
-    cy.wait(1000)
-    this.payments.assertRowsExist()
-  }
+    verifyEmptySearch() {
+        payments.searchPayment('invalid-data-123')
+        cy.wait(1000)
+        payments.verifyNoResultsFound()
+    }
 
-  verifyEmptySearch() {
-    this.payments.searchPayment('invalid-data-123')
-    cy.wait(1000)
-    this.payments.assertNoResults()
-  }
+    verifyGlobalSearch(value) {
+        payments.searchGlobal(value)
+    }
 
-  verifyGlobalSearch(name) {
-    this.payments.searchGlobal(name)
-  }
-
-  openDisputeCenter() {
-    this.payments.clickDisputeCenter()
-  }
+    openDisputeCenter() {
+        payments.openDisputeCenter()
+    }
 }

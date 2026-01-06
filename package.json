@@ -10,5 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^17.2.3"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^10.2.0"
   }
 }
